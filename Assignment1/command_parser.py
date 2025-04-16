@@ -9,7 +9,6 @@
 from notebook import *
 from pathlib import Path
 import shlex
-import json, time
 
 def Create_Notebook(Command_Line):
     """
@@ -20,40 +19,34 @@ def Create_Notebook(Command_Line):
     """
     try:
         quote_char = Command_Line.split()[1][0]
-    except IndexError:
-        print("ERROR")
-        return None,None
 
-    if quote_char not in ['"',"'"] or '-n' not in Command_Line.shlex.split():
-        print("ERROR")
-        return None, None
+        if quote_char not in ['"',"'"] or '-n' not in Command_Line.shlex.split():
+            print("ERROR")
+            return None, None
 
-    try:
         PATH = Path(Command_Line.split(quote_char)[1])
         DIARY_NAME = Command_Line.split()[-1]
         Full_Path = PATH / f'{DIARY_NAME}.json'
-    except IndexError:
-        print("ERROR")
-        return None,None
-    
-    if not PATH.exists() or not PATH.is_dir() or Full_Path.exists():
+
+        if not PATH.exists() or not PATH.is_dir() or Full_Path.exists():
+            print("ERROR")
+            return None, None
+
+        username = input()
+        password = input()
+        bio = input()
+
+        Full_Path.touch() #Create a json file first
+
+        notebook = Notebook(username,password,bio)
+        notebook.save(str(Full_Path))
+        print(f'{str(Full_Path)} CREATED')
+        return PATH,notebook
+
+    except Exception:
         print("ERROR")
         return None, None
 
-    username = input()
-    password = input()
-    bio = input()
-
-    try:
-        Full_Path.touch() #Create a json file first
-    except PermissionError or FileNotFoundError:
-        print("ERROR")
-        return None,None
-
-    notebook = Notebook(username,password,bio)
-    notebook.save(str(Full_Path))
-    print(f'{str(Full_Path)} CREATED')
-    return PATH,notebook
 
 def Delete_Notebook(Command_Line):
     """
@@ -64,14 +57,14 @@ def Delete_Notebook(Command_Line):
 
     if file not json or doesn't exist, print ERROR
     """
-    PATH = Path(Command_Line[2:])
     try:
+        PATH = Path(Command_Line[2:])
         if PATH.exists() and PATH.is_file() and PATH.suffix == '.json':
             PATH.unlink()
             print(f"{str(PATH)} DELETED")
         else:
             print("ERROR")
-    except PermissionError or FileNotFoundError:
+    except Exception:
         print("ERROR")
         return
 
@@ -104,14 +97,14 @@ def Load_Notebook(Command_Line):
         else:
             print("ERROR")
             return None,None
-    except Exception as ex:
+    except Exception:
         print("ERROR")
         #print(f'Load_Notebook: {ex}')
 
 def Edite_Notebook(Command_Line,Notebookpass,Notebook):
-    line = shlex.split(Command_Line)
-    i = 1
     try:
+        line = shlex.split(Command_Line)
+        i = 1
         while i < len(line):
             flag = line[i]
             i+=1
@@ -142,14 +135,14 @@ def Edite_Notebook(Command_Line,Notebookpass,Notebook):
                 print("ERROR")
                 break
             i+=1
-    except IndexError or ValueError:
+    except Exception:
         print("ERROR")
 
 
 def Print_Notebook(Command_Line,Notebook):
-    line = shlex.split(Command_Line)
-    i = 1
     try:
+        line = shlex.split(Command_Line)
+        i = 1
         while i < len(line):
             flag = line[i]
             if flag == "-usr":
@@ -183,5 +176,5 @@ def Print_Notebook(Command_Line,Notebook):
                 print("ERROR")
                 break
             i += 1
-    except ValueError:
+    except Exception:
         print("ERROR")
