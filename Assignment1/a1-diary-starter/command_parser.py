@@ -28,7 +28,7 @@ def Create_Notebook(Command_Line):
         print("ERROR")
         return None, None
 
-    tyr:
+    try:
         PATH = Path(Command_Line.split(quote_char)[1])
         DIARY_NAME = Command_Line.split()[-1]
         Full_Path = PATH / f'{DIARY_NAME}.json'
@@ -47,7 +47,7 @@ def Create_Notebook(Command_Line):
     try:
         Full_Path.touch() #Create a json file first
     except PermissionError or FileNotFoundError:
-        print(ERROR)
+        print("ERROR")
         return None,None
 
     notebook = Notebook(username,password,bio)
@@ -72,7 +72,7 @@ def Delete_Notebook(Command_Line):
         else:
             print("ERROR")
     except PermissionError or FileNotFoundError:
-        print(ERROR)
+        print("ERROR")
         return
 
 def Load_Notebook(Command_Line):
