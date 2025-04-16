@@ -19,18 +19,9 @@ def Create_Notebook(Command_Line):
     """
     try:
         quote_char = Command_Line.split()[1][0]
-
-        if quote_char not in ['"',"'"] or '-n' not in Command_Line.shlex.split():
-            print("ERROR")
-            return None, None
-
         PATH = Path(Command_Line.split(quote_char)[1])
         DIARY_NAME = Command_Line.split()[-1]
         Full_Path = PATH / f'{DIARY_NAME}.json'
-
-        if not PATH.exists() or not PATH.is_dir() or Full_Path.exists():
-            print("ERROR")
-            return None, None
 
         username = input()
         password = input()
@@ -58,7 +49,8 @@ def Delete_Notebook(Command_Line):
     if file not json or doesn't exist, print ERROR
     """
     try:
-        PATH = Path(Command_Line[2:])
+        quote_char = Command_Line.split()[1][0]
+        PATH = Path(Command_Line.split(quote_char)[1])
         if PATH.exists() and PATH.is_file() and PATH.suffix == '.json':
             PATH.unlink()
             print(f"{str(PATH)} DELETED")
@@ -79,7 +71,8 @@ def Load_Notebook(Command_Line):
         <Bio>
     """
     try:
-        PATH = Path(Command_Line[2:])
+        quote_char = Command_Line.split()[1][0]
+        PATH = Path(Command_Line.split(quote_char)[1])
         if not PATH.exists() or not PATH.is_file() or PATH.suffix != '.json':
             print("ERROR")
             return None,None
