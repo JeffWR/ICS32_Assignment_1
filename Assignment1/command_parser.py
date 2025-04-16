@@ -39,7 +39,7 @@ def Create_Notebook(Command_Line):
         return None, None
 
 
-def Delete_Notebook(Command_Line):
+def Delete_Notebook(Command_Line,Notebookpass,Notebook):
     """
     In the formate: D <PATH>
     Get the notebook's path from in Command_Line
@@ -54,11 +54,13 @@ def Delete_Notebook(Command_Line):
         if PATH.exists() and PATH.is_file() and PATH.suffix == '.json':
             PATH.unlink()
             print(f"{str(PATH)} DELETED")
+            return None, None
         else:
             print("ERROR")
+            return Notebookpass, Notebook
     except Exception:
         print("ERROR")
-        return
+        return Notebookpass, Notebook
 
 
 def Load_Notebook(Command_Line):
